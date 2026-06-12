@@ -8,11 +8,13 @@ import com.smartparkpro.api.exception.ApiException;
 import com.smartparkpro.api.repository.WaitingQueueRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@Transactional(readOnly = true)
 public class QueueService {
     private final WaitingQueueRepository queue;
     private final VehicleService vehicleService;
@@ -28,6 +30,7 @@ public class QueueService {
         this.mapper = mapper;
     }
 
+    @Transactional
     public QueueResponse enqueue(QueueRequest request) {
         WaitingQueueEntry entry = new WaitingQueueEntry();
         entry.setVehicle(vehicleService.get(request.vehicleId()));
@@ -43,6 +46,7 @@ public class QueueService {
         return queue.findByParkingLotIdOrderByQueuePositionAsc(parkingLotId).stream().map(mapper::toQueue).toList();
     }
 
+    @Transactional
     public QueueResponse dequeue(UUID parkingLotId) {
         WaitingQueueEntry first = queue.findFirstByParkingLotIdOrderByQueuePositionAsc(parkingLotId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Waiting queue is empty"));

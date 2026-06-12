@@ -7,11 +7,13 @@ import com.smartparkpro.api.exception.ApiException;
 import com.smartparkpro.api.repository.VehicleRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@Transactional(readOnly = true)
 public class VehicleService {
     private final VehicleRepository vehicles;
     private final UserService userService;
@@ -31,6 +33,7 @@ public class VehicleService {
         return mapper.toVehicle(get(id));
     }
 
+    @Transactional
     public VehicleResponse create(VehicleRequest request) {
         if (vehicles.existsByLicensePlate(request.licensePlate())) throw new ApiException(HttpStatus.CONFLICT, "License plate already exists");
         Vehicle vehicle = new Vehicle();
@@ -38,12 +41,14 @@ public class VehicleService {
         return mapper.toVehicle(vehicles.save(vehicle));
     }
 
+    @Transactional
     public VehicleResponse update(UUID id, VehicleRequest request) {
         Vehicle vehicle = get(id);
         apply(vehicle, request);
         return mapper.toVehicle(vehicles.save(vehicle));
     }
 
+    @Transactional
     public void delete(UUID id) {
         vehicles.delete(get(id));
     }

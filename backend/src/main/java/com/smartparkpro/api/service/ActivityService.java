@@ -7,10 +7,12 @@ import com.smartparkpro.api.entity.Vehicle;
 import com.smartparkpro.api.enums.ActivityType;
 import com.smartparkpro.api.repository.ParkingActivityRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class ActivityService {
     private final ParkingActivityRepository activities;
     private final MapperService mapper;
@@ -20,6 +22,7 @@ public class ActivityService {
         this.mapper = mapper;
     }
 
+    @Transactional
     public void record(ActivityType type, Vehicle vehicle, ParkingSlot slot, String description) {
         ParkingActivity activity = new ParkingActivity();
         activity.setActivityType(type);

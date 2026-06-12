@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Transactional(readOnly = true)
 public class PaymentService {
     private final PaymentRepository payments;
     private final BookingService bookingService;
@@ -51,12 +52,14 @@ public class PaymentService {
         return mapper.toPayment(saved);
     }
 
+    @Transactional
     public PaymentResponse update(UUID id, PaymentRequest request) {
         Payment payment = get(id);
         apply(payment, request);
         return mapper.toPayment(payments.save(payment));
     }
 
+    @Transactional
     public void delete(UUID id) {
         payments.delete(get(id));
     }

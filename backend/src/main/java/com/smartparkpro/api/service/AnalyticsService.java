@@ -11,6 +11,7 @@ import com.smartparkpro.api.repository.BookingRepository;
 import com.smartparkpro.api.repository.ParkingSlotRepository;
 import com.smartparkpro.api.repository.PaymentRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -19,6 +20,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class AnalyticsService {
     private final BookingRepository bookings;
     private final ParkingSlotRepository slots;

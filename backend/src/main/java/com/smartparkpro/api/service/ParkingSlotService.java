@@ -7,11 +7,13 @@ import com.smartparkpro.api.exception.ApiException;
 import com.smartparkpro.api.repository.ParkingSlotRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@Transactional(readOnly = true)
 public class ParkingSlotService {
     private final ParkingSlotRepository slots;
     private final ParkingLotService lotService;
@@ -31,18 +33,21 @@ public class ParkingSlotService {
         return mapper.toSlot(get(id));
     }
 
+    @Transactional
     public ParkingSlotResponse create(ParkingSlotRequest request) {
         ParkingSlot slot = new ParkingSlot();
         apply(slot, request);
         return mapper.toSlot(slots.save(slot));
     }
 
+    @Transactional
     public ParkingSlotResponse update(UUID id, ParkingSlotRequest request) {
         ParkingSlot slot = get(id);
         apply(slot, request);
         return mapper.toSlot(slots.save(slot));
     }
 
+    @Transactional
     public void delete(UUID id) {
         slots.delete(get(id));
     }

@@ -16,6 +16,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 @Service
+@Transactional(readOnly = true)
 public class BookingService {
     private final BookingRepository bookings;
     private final UserService userService;
@@ -61,12 +62,14 @@ public class BookingService {
         return mapper.toBooking(saved);
     }
 
+    @Transactional
     public BookingResponse update(UUID id, BookingRequest request) {
         Booking booking = get(id);
         apply(booking, request);
         return mapper.toBooking(bookings.save(booking));
     }
 
+    @Transactional
     public void delete(UUID id) {
         bookings.delete(get(id));
     }
