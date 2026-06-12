@@ -11,6 +11,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Setter
@@ -19,10 +21,12 @@ import lombok.Setter;
 public class ParkingActivity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicle_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Vehicle vehicle;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parking_slot_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private ParkingSlot parkingSlot;
 
     @Enumerated(EnumType.STRING)
